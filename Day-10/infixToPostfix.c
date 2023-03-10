@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
+#include <ctype.h>
 
 int prec(char);
 void push(char);
 char pop();
-bool isEmpty();
-
 
 #define MAX_STACK 20
 
@@ -15,77 +13,52 @@ int top = -1;
 
 void main()
 {
-    char str[] = {"A+C*D"};
+    char str[] = {"A+B*C"};
     char p[20];
     char op;
+    int j = 0;
 
-    // char op = 'c';
-    // strncat(p, &op, 1);
-    // printf("output --> %s ", p);
 
-    for (int i = 0; i < strlen(str); i++)
+    for (int i = 0; str[i] != '\0'; i++)
     {
         char ele = str[i];
         if (ele == ' ' || ele == '\t')
         {
-             continue;
+            continue;
         }
-        
+
         else if (ele == '(')
         {
-            push('(');
+            push(ele);
         }
-        else if ((ele >= 'a' && ele <= 'z') || (ele >= 'A' && ele <= 'Z'))
+        else if (isalnum(ele))
         {
-            strncat(p, &ele, 1);
+            p[j++] = ele;
         }
         else if (ele == ')')
         {
-            while ( ((op = pop()) != '(') && top != -1)
+            while ((op = pop()) != '(')
             {
-                strncat(p, &op, 1);
-                top--;
+                p[j++] = ele;
             }
-            pop('(');
         }
         else
         {
-            if (top == -1)
+            while (prec(stack[top]) > prec(ele))
             {
-                push(ele);
+                p[j++] = pop();
             }
-            else
-            {
-                if (prec(top) < prec(ele))
-                {
-                    push(ele);
-                }
-                else
-                {
-                    while (prec(top) > prec(ele))
-                    {
-                        char item = pop();
-                        strncat(p, &item, 1);
-                    }
-                    push(ele);
-                }
-            }
+            push(ele);   
         }
-        // for (int i = 0; i < sizeof(stack); i++)
-        // {
-        //     printf("%2c", stack[i]);
-        // }
-
     }
 
-    while (!isEmpty())
+    while (top != -1)
     {
-        op = pop();
-        strncat(p, &op, 1);
-        top -= 1;
+        p[j++] = pop();
     }
 
-    printf("%d\n", strlen(stack));
+    p[j] = '\0';
+
     printf("%s", p);
 }
 
@@ -109,8 +82,7 @@ void push(char item)
         return;
     }
 
-    top++;
-    stack[top] = item;
+    stack[++top] = item;
 }
 
 char pop()
@@ -120,17 +92,6 @@ char pop()
         return -1;
     }
 
-    char item = stack[top];
-    top -= 1;
-
+    char item = stack[top--];
     return item;
-}
-
-bool isEmpty()
-{
-    if (top == -1)
-        return false;
-    else
-        return true;
-
 }
