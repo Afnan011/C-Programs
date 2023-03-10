@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 int prec(char);
 void push(char);
 char pop();
+bool isEmpty();
+
 
 #define MAX_STACK 20
 
@@ -68,18 +71,20 @@ void main()
                 }
             }
         }
-        for (int i = 0; i < sizeof(stack); i++)
-        {
-            printf("%2c", stack[i]);
-        }
+        // for (int i = 0; i < sizeof(stack); i++)
+        // {
+        //     printf("%2c", stack[i]);
+        // }
 
     }
 
-    // while (strlen(stack) != 0)
-    // {
-    //     strncat(p, &op, 1);
-    //     top -=1;
-    // }
+    while (!isEmpty())
+    {
+        op = pop();
+        strncat(p, &op, 1);
+        top -= 1;
+    }
+
     printf("%d\n", strlen(stack));
     printf("%s", p);
 }
@@ -119,4 +124,13 @@ char pop()
     top -= 1;
 
     return item;
+}
+
+bool isEmpty()
+{
+    if (top == -1)
+        return false;
+    else
+        return true;
+
 }
