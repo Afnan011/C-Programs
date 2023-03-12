@@ -69,7 +69,9 @@ node *insertAtBeg(node *head, int data)
     newNode -> data = data;
     newNode -> next = head;
 
-    return newNode;
+    head = newNode;
+
+    return head;
 }
 
 node *insertAtIndex(node *head, int data, int index)
